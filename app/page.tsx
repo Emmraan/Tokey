@@ -16,6 +16,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { Header } from '@/components/Header';
 import { TokenGrid } from '@/components/TokenGrid';
+import { MobileTabBar } from '@/components/MobileTabBar';
 import { QrScannerModal } from '@/components/QrScannerModal';
 import { ManualEntryModal } from '@/components/ManualEntryModal';
 import { TokenDetailModal } from '@/components/TokenDetailModal';
@@ -300,7 +301,7 @@ function AuthenticatorApp() {
   }
 
   return (
-    <div className="h-screen overflow-hidden bg-[var(--bg-app)] text-zinc-100 flex selection:bg-zinc-700 selection:text-white">
+    <div className="h-dvh overflow-hidden bg-[var(--bg-app)] text-zinc-100 flex selection:bg-zinc-700 selection:text-white">
       {/* Left Sidebar Rail (Desktop) */}
       <Sidebar
         settings={settings}
@@ -329,7 +330,7 @@ function AuthenticatorApp() {
       />
 
       {/* Main Viewport */}
-      <div className="flex-1 flex flex-col min-w-0 relative h-screen">
+      <div className="flex-1 flex flex-col min-w-0 relative h-dvh">
         {/* Top Header */}
         <Header
           settings={settings}
@@ -362,7 +363,7 @@ function AuthenticatorApp() {
         />
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-4 sm:px-8 lg:px-10 pb-6 pt-4">
+        <div className="flex-1 overflow-y-auto px-4 sm:px-8 lg:px-10 pb-28 lg:pb-6 pt-4">
           {/* Token Grid */}
           <div className="flex-1">
             <TokenGrid
@@ -390,8 +391,8 @@ function AuthenticatorApp() {
           />
         </div>
 
-        {/* Status Bar */}
-        <footer className="mt-auto flex flex-col sm:flex-row items-center justify-between border-t border-zinc-800/80 pt-4 pb-1 text-[11px] text-zinc-500 font-medium gap-3">
+        {/* Status Bar (desktop only — mobile uses the bottom tab bar zone) */}
+        <footer className="hidden lg:flex mt-auto items-center justify-between border-t border-zinc-800/80 pt-4 pb-1 text-[11px] text-zinc-500 font-medium gap-3">
           <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-center sm:text-left">
             <span>
               Master Password:{' '}
@@ -417,6 +418,23 @@ function AuthenticatorApp() {
         </footer>
         </div>
       </div>
+
+      {/* Mobile Bottom Tab Bar */}
+      <MobileTabBar
+        privacyMaskEnabled={settings.privacyMaskEnabled}
+        onOpenScanModal={() => setScanModalOpen(true)}
+        onOpenManualModal={() => {
+          setEditingToken(null);
+          setManualModalOpen(true);
+        }}
+        onTogglePrivacyMask={() =>
+          handleUpdateSettings({
+            ...settings,
+            privacyMaskEnabled: !settings.privacyMaskEnabled,
+          })
+        }
+        onOpenSettingsModal={() => setSettingsModalOpen(true)}
+      />
 
       {/* Modals */}
       <QrScannerModal

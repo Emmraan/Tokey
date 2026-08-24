@@ -4,14 +4,41 @@
   "description": "Zero-knowledge offline-first 2FA Authenticator for TOTP & HOTP tokens.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0B0F19",
-  "theme_color": "#0B0F19",
+  "orientation": "portrait",
+  "background_color": "#090b0e",
+  "theme_color": "#090b0e",
+  "categories": ["utilities", "security"],
+  "lang": "en",
   "icons": [
     {
       "src": "/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

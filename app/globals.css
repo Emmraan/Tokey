@@ -27,6 +27,13 @@ body {
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* App-like scrolling behaviour */
+  overscroll-behavior-y: none;
+}
+
+/* Native-feeling taps on touch devices */
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Tabular numbers for OTP code legibility */

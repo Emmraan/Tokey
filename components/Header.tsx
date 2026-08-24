@@ -162,28 +162,30 @@ export function Header({
             </button>
           </div>
 
-          {/* Action CTAs */}
-          <button
-            id="btn-scan-qr"
-            type="button"
-            onClick={onOpenScanModal}
-            aria-label="Scan QR Code"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 hover:border-zinc-700 text-zinc-300 hover:text-white font-medium text-xs transition-colors shadow-sm cursor-pointer"
-          >
-            <QrCode className="w-3.5 h-3.5 text-zinc-400" />
-            <span>Scan QR</span>
-          </button>
+          {/* Action CTAs (desktop — mobile uses the bottom tab bar) */}
+          <div className="hidden lg:flex items-center gap-2.5">
+            <button
+              id="btn-scan-qr"
+              type="button"
+              onClick={onOpenScanModal}
+              aria-label="Scan QR Code"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 hover:border-zinc-700 text-zinc-300 hover:text-white font-medium text-xs transition-colors shadow-sm cursor-pointer"
+            >
+              <QrCode className="w-3.5 h-3.5 text-zinc-400" />
+              <span>Scan QR</span>
+            </button>
 
-          <button
-            id="btn-add-manual"
-            type="button"
-            onClick={onOpenManualModal}
-            aria-label="Add Account Manually"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white hover:bg-zinc-200 active:scale-[0.98] text-zinc-950 font-semibold text-xs transition-all shadow-sm cursor-pointer"
-          >
-            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>Add Account</span>
-          </button>
+            <button
+              id="btn-add-manual"
+              type="button"
+              onClick={onOpenManualModal}
+              aria-label="Add Account Manually"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white hover:bg-zinc-200 active:scale-[0.98] text-zinc-950 font-semibold text-xs transition-all shadow-sm cursor-pointer"
+            >
+              <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>Add Account</span>
+            </button>
+          </div>
         </div>
       </div>
 

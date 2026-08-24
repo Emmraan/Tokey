@@ -1,10 +1,24 @@
 import type { Metadata, Viewport } from 'next';
+import { PwaRegister } from '@/components/PwaRegister';
 import './globals.css';
 
 export const metadata: Metadata = {
   title: 'TOKEY — Zero-Knowledge 2FA Web Authenticator',
   description: 'Production-grade, offline-first 2FA Authenticator for TOTP & HOTP security tokens with zero-knowledge AES-GCM-256 encryption.',
   manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: '/icons/apple-touch-icon.png',
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'TOKEY',
+  },
   openGraph: {
     title: 'TOKEY — Zero-Knowledge 2FA Web Authenticator',
     description: 'Secure, modern, and beautiful client-side Web Authenticator with QR camera scanning and zero-knowledge encryption.',
@@ -21,6 +35,7 @@ export const viewport: Viewport = {
   themeColor: '#090b0e',
   width: 'device-width',
   initialScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -53,6 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body suppressHydrationWarning className="text-slate-100 min-h-screen">
         {children}
+        <PwaRegister />
       </body>
     </html>
   );

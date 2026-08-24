@@ -32,94 +32,29 @@ const DEFAULT_SETTINGS: VaultSettings = {
   cloudSyncEnabled: false,
 };
 
-// Starter demo tokens for initial first-time load
-export const SAMPLE_TOKENS: Token[] = [
-  {
-    id: 'tokey-sample-1',
-    issuer: 'GitHub',
-    account: 'alex.developer@octocat.io',
-    secret: 'JBSWY3DPEHPK3PXP', // standard test secret
-    type: 'totp',
-    algorithm: 'SHA1',
-    digits: 6,
-    period: 30,
-    category: 'Work',
-    isPinned: true,
-    createdAt: Date.now() - 86400000 * 5,
-    updatedAt: Date.now() - 86400000 * 5,
-  },
-  {
-    id: 'tokey-sample-2',
-    issuer: 'Google',
-    account: 'alex.security@gmail.com',
-    secret: 'HXDMVJECJJWSRB3HWIZR4IFUGFTMXBOZ',
-    type: 'totp',
-    algorithm: 'SHA1',
-    digits: 6,
-    period: 30,
-    category: 'Personal',
-    isPinned: true,
-    createdAt: Date.now() - 86400000 * 3,
-    updatedAt: Date.now() - 86400000 * 3,
-  },
-  {
-    id: 'tokey-sample-3',
-    issuer: 'AWS',
-    account: 'root-prod-cloud',
-    secret: 'NBSWY3DPEHPK3PXPNBSWY3DPEHPK3PXP',
-    type: 'totp',
-    algorithm: 'SHA256',
-    digits: 6,
-    period: 30,
-    category: 'Work',
-    isPinned: false,
-    createdAt: Date.now() - 86400000 * 2,
-    updatedAt: Date.now() - 86400000 * 2,
-  },
-  {
-    id: 'tokey-sample-4',
-    issuer: 'Binance',
-    account: 'trader_vault_99',
-    secret: 'KRUGS4ZANFZSAYJA',
-    type: 'totp',
-    algorithm: 'SHA1',
-    digits: 6,
-    period: 30,
-    category: 'Finance',
-    isPinned: false,
-    createdAt: Date.now() - 86400000,
-    updatedAt: Date.now() - 86400000,
-  },
-  {
-    id: 'tokey-sample-5',
-    issuer: 'Discord',
-    account: 'CyberGuardian#4096',
-    secret: 'GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ',
-    type: 'totp',
-    algorithm: 'SHA1',
-    digits: 6,
-    period: 30,
-    category: 'Social',
-    isPinned: false,
-    createdAt: Date.now() - 3600000,
-    updatedAt: Date.now() - 3600000,
-  },
-  {
-    id: 'tokey-sample-6',
-    issuer: 'Internal Server Counter',
-    account: 'hotp-admin-key',
-    secret: 'MZXW6YTBOI======',
-    type: 'hotp',
-    algorithm: 'SHA1',
-    digits: 6,
-    period: 30,
-    counter: 12,
-    category: 'Work',
-    isPinned: false,
-    createdAt: Date.now() - 1800000,
-    updatedAt: Date.now() - 1800000,
-  },
-];
+export async function loadInitialTokens(): Promise<{ tokens: Token[]; requiresUnlock: boolean }> {
+  const settings = await loadVaultSettings();
+
+  if (settings.hasPassword) {
+    return {
+      tokens: [],
+      requiresUnlock: true,
+    };
+  }
+
+  try {
+    const stored = await get<Token[]>(STORAGE_KEYS.UNENCRYPTED_TOKENS);
+    // One-time purge of legacy demo/sample tokens
+    const tokens = (stored ?? []).filter((t) => !t.id?.startsWith('tokey-sample-'));
+    if (stored && tokens.length !== stored.length) {
+      await set(STORAGE_KEYS.UNENCRYPTED_TOKENS, tokens);
+    }
+    return { tokens, requiresUnlock: false };
+  } catch (err) {
+    console.error('Failed to load unencrypted tokens:', err);
+    return { tokens: [], requiresUnlock: false };
+  }
+}
 
 export async function loadVaultSettings(): Promise<VaultSettings> {
   try {
@@ -136,30 +71,6 @@ export async function loadVaultSettings(): Promise<VaultSettings> {
 
 export async function saveVaultSettings(settings: VaultSettings): Promise<void> {
   await set(STORAGE_KEYS.SETTINGS, settings);
-}
-
-export async function loadInitialTokens(): Promise<{ tokens: Token[]; requiresUnlock: boolean }> {
-  const settings = await loadVaultSettings();
-
-  if (settings.hasPassword) {
-    return {
-      tokens: [],
-      requiresUnlock: true,
-    };
-  }
-
-  try {
-    const tokens = await get<Token[]>(STORAGE_KEYS.UNENCRYPTED_TOKENS);
-    if (!tokens || tokens.length === 0) {
-      // First time use: initialize sample tokens
-      await set(STORAGE_KEYS.UNENCRYPTED_TOKENS, SAMPLE_TOKENS);
-      return { tokens: SAMPLE_TOKENS, requiresUnlock: false };
-    }
-    return { tokens, requiresUnlock: false };
-  } catch (err) {
-    console.error('Failed to load unencrypted tokens:', err);
-    return { tokens: SAMPLE_TOKENS, requiresUnlock: false };
-  }
 }
 
 export async function saveTokens(tokens: Token[], activeKey: CryptoKey | null): Promise<void> {
