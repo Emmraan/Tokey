@@ -86,11 +86,14 @@ export function Header({
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Search accounts..."
+              aria-label="Search accounts"
               className="bg-transparent border-none text-xs focus:outline-none w-full text-zinc-100 placeholder:text-zinc-600"
             />
             {searchQuery ? (
               <button
+                type="button"
                 onClick={() => onSearchChange('')}
+                aria-label="Clear search"
                 className="text-zinc-500 hover:text-white transition-colors cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" />
@@ -106,7 +109,9 @@ export function Header({
           <div className="flex items-center gap-1 bg-zinc-950/40 p-1 rounded-lg border border-zinc-900">
             <button
               id="btn-toggle-privacy"
+              type="button"
               onClick={onTogglePrivacyMask}
+              aria-label={settings.privacyMaskEnabled ? 'Disable Privacy Blur' : 'Enable Privacy Mask (Anti-Shoulder Surfing)'}
               title={settings.privacyMaskEnabled ? 'Disable Privacy Blur' : 'Enable Privacy Mask (Anti-Shoulder Surfing)'}
               className={`p-1.5 rounded-md transition-colors cursor-pointer ${
                 settings.privacyMaskEnabled
@@ -119,7 +124,9 @@ export function Header({
 
             <button
               id="btn-toggle-compact"
+              type="button"
               onClick={onToggleCompactView}
+              aria-label={settings.compactView ? 'Switch to Standard Grid' : 'Switch to Compact Grid'}
               title={settings.compactView ? 'Switch to Standard Grid' : 'Switch to Compact Grid'}
               className={`p-1.5 rounded-md transition-colors cursor-pointer ${
                 settings.compactView
@@ -133,7 +140,9 @@ export function Header({
             {settings.hasPassword && (
               <button
                 id="btn-lock-vault"
+                type="button"
                 onClick={onLockVault}
+                aria-label="Lock Vault (Cmd+L)"
                 title="Lock Vault (Cmd+L)"
                 className="p-1.5 rounded-md text-zinc-500 hover:text-rose-400 hover:bg-zinc-900 transition-colors cursor-pointer"
               >
@@ -143,7 +152,9 @@ export function Header({
 
             <button
               id="btn-open-settings"
+              type="button"
               onClick={onOpenSettingsModal}
+              aria-label="Settings and Backup"
               title="Settings & Backup"
               className="p-1.5 rounded-md text-zinc-500 hover:text-zinc-200 hover:bg-zinc-900 transition-colors cursor-pointer"
             >
@@ -154,7 +165,9 @@ export function Header({
           {/* Action CTAs */}
           <button
             id="btn-scan-qr"
+            type="button"
             onClick={onOpenScanModal}
+            aria-label="Scan QR Code"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 hover:border-zinc-700 text-zinc-300 hover:text-white font-medium text-xs transition-colors shadow-sm cursor-pointer"
           >
             <QrCode className="w-3.5 h-3.5 text-zinc-400" />
@@ -163,7 +176,9 @@ export function Header({
 
           <button
             id="btn-add-manual"
+            type="button"
             onClick={onOpenManualModal}
+            aria-label="Add Account Manually"
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white hover:bg-zinc-200 active:scale-[0.98] text-zinc-950 font-semibold text-xs transition-all shadow-sm cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5 stroke-[2.5]" />

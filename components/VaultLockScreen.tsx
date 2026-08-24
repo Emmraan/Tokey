@@ -87,6 +87,9 @@ export function VaultLockScreen({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#090b0e]/95 backdrop-blur-md">
       <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="vault-lock-title"
         initial={{ opacity: 0, scale: 0.98, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.15 }}
@@ -98,7 +101,7 @@ export function VaultLockScreen({
         </div>
 
         {/* Title */}
-        <h2 className="text-lg font-bold text-white tracking-tight">Unlock Vault</h2>
+        <h2 id="vault-lock-title" className="text-lg font-bold text-white tracking-tight">Unlock Vault</h2>
         <p className="text-xs text-zinc-400 mt-1 mb-6">
           Enter master password or PIN to decrypt your TOTP keys.
         </p>
@@ -120,6 +123,7 @@ export function VaultLockScreen({
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
               className="absolute right-3 text-zinc-500 hover:text-zinc-300 transition-colors p-1 cursor-pointer"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}

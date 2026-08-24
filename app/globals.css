@@ -3,7 +3,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg-app: #0c0e12;
+  /* App background = main viewport (#090b0e); rail = icon sidebar (#0c0e12) */
+  --bg-app: #090b0e;
+  --bg-rail: #0c0e12;
   --bg-surface: #14171d;
   --bg-elevated: #1a1e26;
   --border-subtle: rgba(255, 255, 255, 0.07);
@@ -51,12 +53,23 @@ body {
   box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
 }
 
-.surface-hover {
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+/* Keyboard-only focus ring (mouse clicks do not trigger :focus-visible) */
+:focus-visible {
+  outline: 2px solid rgba(228, 228, 231, 0.6);
+  outline-offset: 2px;
+  border-radius: inherit;
 }
-.surface-hover:hover {
-  background-color: #181c25;
-  border-color: rgba(255, 255, 255, 0.15);
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Custom minimal scrollbar */

@@ -52,6 +52,8 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {children}
       <div
         id="tokey-toast-container"
+        role="status"
+        aria-live="polite"
         className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"
       >
         <AnimatePresence>
@@ -84,8 +86,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                   )}
                 </div>
                 <button
+                  type="button"
                   onClick={() => removeToast(toast.id)}
-                  className="text-zinc-400 hover:text-white transition-colors shrink-0 p-0.5"
+                  aria-label="Dismiss notification"
+                  className="text-zinc-400 hover:text-white transition-colors shrink-0 p-1 -m-0.5"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>

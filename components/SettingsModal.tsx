@@ -295,6 +295,9 @@ export function SettingsModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#090b0e]/85 backdrop-blur-sm">
       <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="vault-settings-title"
         initial={{ opacity: 0, scale: 0.98, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.98, y: 8 }}
@@ -308,12 +311,14 @@ export function SettingsModal({
               <Shield className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-white">Vault Settings</h2>
+              <h2 id="vault-settings-title" className="text-sm font-semibold text-white">Vault Settings</h2>
               <p className="text-[11px] text-zinc-400">Zero-knowledge encryption & local preferences</p>
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Close"
             className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />

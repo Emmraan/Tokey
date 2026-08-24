@@ -18,16 +18,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0B0F19',
+  themeColor: '#090b0e',
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark bg-[#0B0F19] antialiased">
+    <html lang="en" className="dark antialiased">
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -53,7 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body suppressHydrationWarning className="bg-[#0B0F19] text-slate-100 min-h-screen">
+      <body suppressHydrationWarning className="text-slate-100 min-h-screen">
         {children}
       </body>
     </html>

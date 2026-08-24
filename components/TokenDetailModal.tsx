@@ -89,6 +89,9 @@ export function TokenDetailModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#090b0e]/85 backdrop-blur-sm">
       <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="token-detail-title"
         initial={{ opacity: 0, scale: 0.98, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.98, y: 8 }}
@@ -100,12 +103,14 @@ export function TokenDetailModal({
           <div className="flex items-center gap-2.5">
             <RenderAccountIcon issuer={token.issuer} account={token.account} className="w-8 h-8" />
             <div className="min-w-0">
-              <h2 className="text-sm font-semibold text-white truncate">{token.issuer}</h2>
+              <h2 id="token-detail-title" className="text-sm font-semibold text-white truncate">{token.issuer}</h2>
               <p className="text-[11px] text-zinc-400 truncate">{token.account}</p>
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Close"
             className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />

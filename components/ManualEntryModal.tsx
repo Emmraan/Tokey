@@ -140,6 +140,9 @@ export function ManualEntryModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#090b0e]/85 backdrop-blur-sm">
       <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="manual-entry-title"
         initial={{ opacity: 0, scale: 0.98, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.98, y: 8 }}
@@ -153,14 +156,16 @@ export function ManualEntryModal({
               <Key className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-white">
+              <h2 id="manual-entry-title" className="text-sm font-semibold text-white">
                 {editingToken ? 'Edit Account' : 'Add 2FA Account'}
               </h2>
               <p className="text-[11px] text-zinc-400">Zero-knowledge local encryption</p>
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Close"
             className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />

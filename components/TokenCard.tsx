@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Copy,
@@ -50,6 +50,31 @@ export function TokenCard({
   const [showMenu, setShowMenu] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  // Close dropdown on outside click or Escape
+  useEffect(() => {
+    if (!showMenu) return;
+
+    const handlePointerDown = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown, true);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown, true);
+    };
+  }, [showMenu]);
 
   // Live TOTP state
   const [totpData, setTotpData] = useState(() =>
@@ -195,10 +220,12 @@ export function TokenCard({
         ) : (
           <button
             id={`hotp-increment-${token.id}`}
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               onIncrementHotp(token);
             }}
+            aria-label="Generate next HOTP code"
             title="Generate next HOTP code"
             className="w-9 h-9 flex items-center justify-center rounded-full bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-zinc-700/60 hover:border-zinc-600 transition-all active:scale-95 cursor-pointer shadow-sm"
           >
@@ -210,8 +237,15 @@ export function TokenCard({
       {/* Middle Code Box with Direct Click-to-Copy */}
       <div
         onClick={handleCopy}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleCopy(e as unknown as React.MouseEvent);
+          }
+        }}
         role="button"
         tabIndex={0}
+        aria-label={`Copy security code ${formattedCode}`}
         title="Click to copy security code"
         className="flex items-center justify-between bg-zinc-950 hover:bg-black border border-zinc-900/80 hover:border-zinc-800 rounded-xl px-4 py-3 mt-0.5 cursor-pointer transition-all duration-200 group/box select-none overflow-hidden relative shadow-inner"
       >
@@ -226,7 +260,9 @@ export function TokenCard({
         </span>
 
         <button
+          type="button"
           onClick={handleCopy}
+          aria-label={copied ? 'Copied' : 'Copy security code'}
           className={`relative z-10 p-2 rounded-md transition-all duration-200 cursor-pointer ${
             copied
               ? 'bg-emerald-500/20 text-emerald-400 scale-110'
@@ -256,14 +292,16 @@ export function TokenCard({
         </div>
 
         {/* Options Row */}
-        <div className="relative flex items-center gap-0.5">
+        <div ref={menuRef} className="relative flex items-center gap-0.5">
           <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               onPinToggle(token);
             }}
+            aria-label={token.isPinned ? 'Remove from favorites' : 'Add to favorites'}
             title={token.isPinned ? 'Remove from favorites' : 'Add to favorites'}
-            className={`p-1 rounded transition-colors ${
+            className={`p-1.5 rounded transition-colors ${
               token.isPinned
                 ? 'text-amber-400'
                 : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
@@ -273,12 +311,16 @@ export function TokenCard({
           </button>
 
           <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               setShowMenu(!showMenu);
             }}
+            aria-label="More options"
+            aria-haspopup="menu"
+            aria-expanded={showMenu}
             title="More Options"
-            className="p-1 rounded text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 transition-colors"
+            className="p-1.5 rounded text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 transition-colors"
           >
             <MoreVertical className="w-3.5 h-3.5" />
           </button>

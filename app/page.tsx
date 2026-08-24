@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { MotionConfig } from 'motion/react';
 import { Token, VaultSettings } from '@/lib/types';
 import {
   loadVaultSettings,
@@ -276,7 +277,7 @@ function AuthenticatorApp() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#090b0e] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--bg-app)] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-6 h-6 border-2 border-zinc-500 border-t-zinc-100 rounded-full animate-spin" />
           <p className="text-[11px] mono text-zinc-400 tracking-wider">LOADING VAULT...</p>
@@ -299,7 +300,7 @@ function AuthenticatorApp() {
   }
 
   return (
-    <div className="h-screen overflow-hidden bg-[#090b0e] text-zinc-100 flex selection:bg-zinc-700 selection:text-white">
+    <div className="h-screen overflow-hidden bg-[var(--bg-app)] text-zinc-100 flex selection:bg-zinc-700 selection:text-white">
       {/* Left Sidebar Rail (Desktop) */}
       <Sidebar
         settings={settings}
@@ -468,7 +469,9 @@ function AuthenticatorApp() {
 export default function Page() {
   return (
     <ToastProvider>
-      <AuthenticatorApp />
+      <MotionConfig reducedMotion="user">
+        <AuthenticatorApp />
+      </MotionConfig>
     </ToastProvider>
   );
 }
