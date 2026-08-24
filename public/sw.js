@@ -1,5 +1,5 @@
 /* TOKEY service worker — offline-first app shell */
-const VERSION = 'tokey-v1';
+const VERSION = 'tokey-v2';
 const APP_SHELL = [
   '/',
   '/manifest.json',
