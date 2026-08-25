@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/Emmraan/Tokey/compare/v1.0.0...v1.0.1) (2026-08-25)
+
+
+### Bug Fixes
+
+* improve search bar caret visibility and focused spacing ([1d3c5aa](https://github.com/Emmraan/Tokey/commit/1d3c5aa1c717f69dadbf2e825e0a5d9d38b7f417))
+
 # 1.0.0 (2026-08-25)
 
 
