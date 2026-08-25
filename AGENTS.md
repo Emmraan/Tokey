@@ -39,11 +39,15 @@ no accounts, and no telemetry.
 2. **Conventional Commits** on every commit: `feat:`, `fix:`, `chore:`, `docs:`…
 3. **`pnpm` only.** Do not add package managers or lockfiles other than
    `pnpm-lock.yaml`.
-4. **Verify after every change:** run `pnpm lint` and `npx tsc --noEmit`.
-   Run `pnpm build` before declaring a task done if you touched imports,
-   routing, config, or anything server-side.
-5. **No test framework exists yet.** If you add one (Vitest preferred), update
-   this file's Commands table in the same PR.
+4. **Verify after every change:** run `pnpm lint`, `pnpm typecheck` and
+   `pnpm test`. Run `pnpm build` before declaring a task done if you touched
+   imports, routing, config, or anything server-side.
+5. **Tests live in `tests/`** (Vitest). Pure `lib/` logic gets unit tests;
+   browser-bound modules (storage, webauthn, qr-decoder, sound) are exempt.
+   Add or update tests whenever you change a covered `lib/` module.
+6. **Releases are automated** via semantic-release on push to `main`
+   (`feat:` → minor, `fix:` → patch, `feat!:`/`BREAKING CHANGE:` → major).
+   Never bump versions or edit `CHANGELOG.md` by hand.
 
 ## Repo layout
 
@@ -105,6 +109,21 @@ no accounts, and no telemetry.
 | Install deps | `pnpm install` |
 | Dev server | `pnpm dev` |
 | Lint | `pnpm lint` |
-| Typecheck | `npx tsc --noEmit` |
+| Typecheck | `pnpm typecheck` |
+| Tests (once) | `pnpm test` |
+| Tests (watch mode) | `pnpm test:watch` |
+| Tests + coverage | `pnpm test:coverage` |
 | Production build | `pnpm build` |
 | Regenerate PWA icons | `pnpm icons` |
+| Release (CI only) | `pnpm release` |
+
+## Git hooks
+
+Husky manages git hooks (`core.hooksPath = .husky/_`).
+
+- **pre-commit** runs **lint-staged** (ESLint --fix) over staged JS/TS files.
+- **pre-push** rebases onto `origin/<branch>` before every push. semantic-release
+  creates tags and `chore(release)` commits from CI on `main`; this keeps local
+  history in sync so pushes never get rejected as non-fast-forward.
+
+Typecheck, tests and build run in CI, not in hooks — keep commits fast.

@@ -66,8 +66,20 @@ pnpm start
 | `pnpm build` | Create a production build |
 | `pnpm start` | Serve the production build |
 | `pnpm lint` | Run ESLint |
-| `npx tsc --noEmit` | TypeScript check |
+| `pnpm typecheck` | TypeScript check |
+| `pnpm test` | Run the Vitest suite once |
+| `pnpm test:watch` | Run tests in watch mode |
+| `pnpm test:coverage` | Tests with V8 coverage report |
 | `pnpm icons` | Regenerate PWA icons |
+
+## Testing & releases
+
+- Unit tests use **Vitest** and live in `tests/`, covering the pure `lib/`
+  modules (OTP parsing, import auto-detection, backup merge, crypto helpers).
+- A husky **pre-commit hook** runs ESLint on staged files.
+- Releases are automated with **semantic-release**: conventional commits
+  (`feat:` / `fix:`) on `main` produce version bumps, a generated
+  `CHANGELOG.md` and GitHub releases via CI.
 
 ## Tech stack
 
@@ -81,6 +93,8 @@ pnpm start
 | Storage | IndexedDB via `idb-keyval` | Encrypted or plaintext local vault |
 | QR | `jsqr` + camera stream | Scan & image import |
 | Batch import | `protobufjs` | Google Authenticator migration payloads |
+| Testing | Vitest 4 + coverage v8 | Unit tests for pure `lib/` modules |
+| Release | semantic-release | Conventional Commits drive versions |
 
 ## Importing from other apps
 

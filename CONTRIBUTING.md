@@ -27,17 +27,22 @@ pnpm dev        # http://localhost:3000
 | Check | Command |
 | --- | --- |
 | Lint | `pnpm lint` |
-| Typecheck | `npx tsc --noEmit` |
+| Typecheck | `pnpm typecheck` |
+| Tests | `pnpm test` |
 | Production build (routing/config changes) | `pnpm build` |
 
-All three must pass. CI runs the same gates on every push and PR.
+All four must pass. CI runs the same gates on every push and PR.
+
+A **husky pre-commit hook** (lint-staged) auto-fixes ESLint issues on the
+files you stage — it is a convenience, not a substitute for the checks above.
 
 ## Ground rules
 
 1. **Security is non-negotiable** — see AGENTS.md "Security rules". Never log
    secrets; keep plaintext-export confirmations; crypto only in `lib/crypto.ts`.
 2. **Conventional Commits** (`feat:`, `fix:`, `chore:`, `docs:`…) — commit
-   messages should describe *why*, not just *what*.
+   messages should describe *why*, not just *what*. Releases are cut
+   automatically by semantic-release from these messages on `main`.
 3. **`pnpm` only.** No other package managers or lockfiles.
 4. **Follow existing patterns.** Design tokens (`surface-card`,
    `surface-elevated`), `motion/react` animations, `lucide-react` icons, and
