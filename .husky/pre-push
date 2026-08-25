@@ -1,0 +1,9 @@
+# semantic-release cuts tags & release commits from CI on main.
+# Rebase onto origin/<branch> before pushing so local history never
+# diverges from the remote after a CI release.
+branch="$(git rev-parse --abbrev-ref HEAD)"
+
+# Only sync when the branch already exists on origin (skip new/local-only branches)
+if git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+  git pull --rebase origin "$branch"
+fi
