@@ -78,7 +78,7 @@ export function Header({
         {/* Right Controls Bar */}
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Search Box */}
-          <div className="relative flex items-center w-full sm:w-60 bg-zinc-950/80 border border-zinc-800 rounded-lg px-3 py-1.5 focus-within:border-zinc-700 transition-all shadow-inner">
+          <div className="relative flex items-center w-full sm:w-60 bg-zinc-950/80 border border-zinc-800 rounded-lg px-3 py-2 focus-within:border-zinc-600 transition-all shadow-inner">
             <Search className="w-3.5 h-3.5 text-zinc-500 shrink-0 mr-2" />
             <input
               id="header-search-input"
@@ -87,7 +87,7 @@ export function Header({
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Search accounts..."
               aria-label="Search accounts"
-              className="bg-transparent border-none text-xs focus:outline-none w-full text-zinc-100 placeholder:text-zinc-600"
+              className="bg-transparent border-none text-xs leading-relaxed caret-sky-400 focus:outline-none focus-visible:outline-none w-full text-zinc-100 placeholder:text-zinc-600"
             />
             {searchQuery ? (
               <button
