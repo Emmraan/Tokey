@@ -27,6 +27,7 @@ import {
   downloadFile,
   mergeTokens,
 } from '@/lib/cloud-sync';
+import { detectAndParseImport } from '@/lib/import-parsers';
 import { isWebAuthnSupported, registerPasskey } from '@/lib/webauthn';
 import { useToast } from './NotificationToast';
 
@@ -66,6 +67,15 @@ export function SettingsModal({
   const [restorePassword, setRestorePassword] = useState('');
   const [backupFileContent, setBackupFileContent] = useState<string | null>(null);
   const [isEncryptedBackupFile, setIsEncryptedBackupFile] = useState(false);
+  const [parsedImportTokens, setParsedImportTokens] = useState<Token[]>([]);
+  const [importSourceLabel, setImportSourceLabel] = useState('Plaintext Backup');
+
+  const IMPORT_FORMAT_LABELS: Record<string, string> = {
+    'ente-export': 'Ente Auth Export',
+    'plain-text': 'Plain Text (otpauth URIs)',
+    'tokey-json': 'TOKEY Plaintext Backup',
+    'generic-json': 'JSON Token List',
+  };
 
   // Reset confirmation
   const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -231,24 +241,46 @@ export function SettingsModal({
     });
   };
 
-  // Restore file selection
+  // Restore file selection — auto-detects TOKEY / Ente / plain-text formats
   const handleSelectRestoreFile = (file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const content = e.target?.result as string;
-      setBackupFileContent(content);
 
       try {
-        const parsed = JSON.parse(content);
-        if (parsed.appName === 'TOKEY_ENCRYPTED') {
+        const result = detectAndParseImport(content);
+
+        // Encrypted TOKEY backup — needs the password flow
+        if (result.format === 'tokey-encrypted') {
           setIsEncryptedBackupFile(true);
-        } else if (parsed.tokens && Array.isArray(parsed.tokens)) {
-          setIsEncryptedBackupFile(false);
-        } else {
-          showToast({ title: 'Invalid Backup File', type: 'error' });
+          setImportSourceLabel('Encrypted Backup');
+          setParsedImportTokens([]);
+          setBackupFileContent(content);
+          return;
         }
+
+        // Unsupported format with a specific reason (e.g. Ente encrypted export)
+        if (result.error) {
+          showToast({ title: 'Unsupported File', description: result.error, type: 'error' });
+          return;
+        }
+
+        if (result.tokens.length === 0) {
+          showToast({
+            title: 'No Accounts Found',
+            description:
+              'File could not be read as a TOKEY backup, Ente export, or otpauth:// plain text.',
+            type: 'error',
+          });
+          return;
+        }
+
+        setIsEncryptedBackupFile(false);
+        setParsedImportTokens(result.tokens);
+        setImportSourceLabel(IMPORT_FORMAT_LABELS[result.format] || 'Plaintext Backup');
+        setBackupFileContent(content);
       } catch {
-        showToast({ title: 'Invalid JSON File', type: 'error' });
+        showToast({ title: 'Invalid Backup File', type: 'error' });
       }
     };
     reader.readAsText(file);
@@ -268,8 +300,7 @@ export function SettingsModal({
         }
         importedTokens = await restoreEncryptedBackup(backupFileContent, restorePassword);
       } else {
-        const payload = JSON.parse(backupFileContent);
-        importedTokens = payload.tokens || [];
+        importedTokens = parsedImportTokens;
       }
 
       const { merged, addedCount, updatedCount } = mergeTokens(tokens, importedTokens);
@@ -282,6 +313,7 @@ export function SettingsModal({
       });
 
       setBackupFileContent(null);
+      setParsedImportTokens([]);
       setRestorePassword('');
     } catch (err: any) {
       showToast({
@@ -559,7 +591,7 @@ export function SettingsModal({
                   onClick={() => {
                     const input = document.createElement('input');
                     input.type = 'file';
-                    input.accept = '.json';
+                    input.accept = '.json,.txt';
                     input.onchange = (e: any) => {
                       if (e.target.files && e.target.files[0]) {
                         handleSelectRestoreFile(e.target.files[0]);
@@ -571,17 +603,20 @@ export function SettingsModal({
                 >
                   <Upload className="w-6 h-6 text-zinc-400 mx-auto mb-1.5" />
                   <p className="text-xs font-medium text-zinc-200">
-                    {backupFileContent ? 'File Loaded (Click to change)' : 'Select Backup File (.json)'}
+                    {backupFileContent ? 'File Loaded (Click to change)' : 'Select Backup File (.json / .txt)'}
                   </p>
                   <p className="text-[11px] text-zinc-500 mt-0.5">
-                    Supports TOKEY encrypted or plaintext JSON backups
+                    Supports TOKEY backups, Ente Auth exports & plain otpauth:// text files
                   </p>
                 </div>
 
                 {backupFileContent && (
                   <div className="p-3.5 rounded-lg bg-zinc-900 border border-zinc-800 space-y-2.5">
                     <p className="text-xs text-zinc-300">
-                      Format: <strong className="text-white">{isEncryptedBackupFile ? 'Encrypted Backup' : 'Plaintext Backup'}</strong>
+                      Format: <strong className="text-white">{importSourceLabel}</strong>
+                      {!isEncryptedBackupFile && parsedImportTokens.length > 0 && (
+                        <span className="text-zinc-500"> · {parsedImportTokens.length} account(s) detected</span>
+                      )}
                     </p>
 
                     {isEncryptedBackupFile && (
