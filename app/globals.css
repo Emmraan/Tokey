@@ -60,11 +60,20 @@ body {
   box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
 }
 
-/* Keyboard-only focus ring (mouse clicks do not trigger :focus-visible) */
+/* Keyboard-only focus ring (mouse clicks do not trigger :focus-visible).
+   Text inputs are excluded: they already signal focus via border colour
+   (e.g. focus:border-zinc-500), and the ring clashes with compact bars
+   like the header search box. */
 :focus-visible {
   outline: 2px solid rgba(228, 228, 231, 0.6);
   outline-offset: 2px;
   border-radius: inherit;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
 }
 
 /* Respect users who prefer reduced motion */
