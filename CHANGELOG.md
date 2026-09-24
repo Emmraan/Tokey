@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/Emmraan/Tokey/compare/v1.0.1...v1.0.2) (2026-09-24)
+
+
+### Bug Fixes
+
+* remount manual entry modal on open so edit token prefills data ([8b8d206](https://github.com/Emmraan/Tokey/commit/8b8d2063baf4b937aa3b570e1a8b8c8727cffbb1))
+
 ## [1.0.1](https://github.com/Emmraan/Tokey/compare/v1.0.0...v1.0.1) (2026-08-25)
 
 
