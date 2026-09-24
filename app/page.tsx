@@ -446,15 +446,22 @@ function AuthenticatorApp() {
         hapticEnabled={settings.hapticEnabled}
       />
 
-      <ManualEntryModal
-        isOpen={manualModalOpen}
-        onClose={() => {
-          setManualModalOpen(false);
-          setEditingToken(null);
-        }}
-        onSaveToken={handleSaveToken}
-        editingToken={editingToken}
-      />
+      {/* Remounted on every open (plus key on the edited token id) so the
+          modal's useState initializers pick up the correct token. The modal
+          used to stay mounted across opens, which left stale blank values
+          when editing an existing token. */}
+      {manualModalOpen && (
+        <ManualEntryModal
+          key={editingToken?.id ?? 'new'}
+          isOpen={manualModalOpen}
+          onClose={() => {
+            setManualModalOpen(false);
+            setEditingToken(null);
+          }}
+          onSaveToken={handleSaveToken}
+          editingToken={editingToken}
+        />
+      )}
 
       <TokenDetailModal
         token={activeDetailToken}
